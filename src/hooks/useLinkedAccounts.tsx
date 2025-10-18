@@ -197,6 +197,40 @@ export const useLinkedAccounts = () => {
     },
   });
 
+  // Sync M-Pesa balance
+  const syncBalanceMutation = useMutation({
+    mutationFn: async (params: { accountId: string; phoneNumber: string }) => {
+      if (!user) throw new Error('User not authenticated');
+
+      const { data, error } = await supabase.functions.invoke('sync-mpesa-balance', {
+        body: {
+          accountId: params.accountId,
+          phoneNumber: params.phoneNumber,
+        },
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['linked-accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['central-wallet'] });
+      
+      toast({
+        title: '✅ Balance Synced',
+        description: `Your M-Pesa balance has been updated: KES ${data.balance?.toFixed(2)}`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: '❌ Sync Failed',
+        description: error.message || 'Failed to sync M-Pesa balance',
+        variant: 'destructive',
+      });
+    },
+  });
+
   return {
     linkedAccounts,
     isLoading,
@@ -204,5 +238,7 @@ export const useLinkedAccounts = () => {
     isLinkingAccount: linkAccountMutation.isPending,
     setPrimaryAccount: setPrimaryAccountMutation.mutateAsync,
     removeAccount: removeAccountMutation.mutateAsync,
+    syncBalance: syncBalanceMutation.mutateAsync,
+    isSyncingBalance: syncBalanceMutation.isPending,
   };
 };

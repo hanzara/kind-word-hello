@@ -8,12 +8,13 @@ import {
   Building2, 
   Star,
   Trash2,
-  Check
+  Check,
+  RefreshCw
 } from 'lucide-react';
 import { formatDistance } from 'date-fns';
 
 export function LinkedAccountsManager() {
-  const { linkedAccounts, isLoading, setPrimaryAccount, removeAccount } = useLinkedAccounts();
+  const { linkedAccounts, isLoading, setPrimaryAccount, removeAccount, syncBalance, isSyncingBalance } = useLinkedAccounts();
 
   if (isLoading) {
     return (
@@ -92,9 +93,33 @@ export function LinkedAccountsManager() {
                       </span>
                     )}
                   </div>
+                  {account.metadata?.balance && (
+                    <div className="mt-2">
+                      <span className="text-lg font-bold text-primary">
+                        KES {account.metadata.balance.toFixed(2)}
+                      </span>
+                      {account.metadata?.last_synced && (
+                        <span className="text-xs text-muted-foreground ml-2">
+                          • Synced {formatDistance(new Date(account.metadata.last_synced), new Date(), { addSuffix: true })}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2">
+                {account.provider === 'mpesa' && account.phone_number && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => syncBalance({ accountId: account.id, phoneNumber: account.phone_number! })}
+                    disabled={isSyncingBalance}
+                    className="gap-1"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${isSyncingBalance ? 'animate-spin' : ''}`} />
+                    Sync
+                  </Button>
+                )}
                 {!account.is_primary && (
                   <Button
                     size="sm"
