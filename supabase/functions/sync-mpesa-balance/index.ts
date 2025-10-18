@@ -33,8 +33,7 @@ serve(async (req) => {
 
     console.log('Syncing M-Pesa balance for user:', user.id, 'phone:', phoneNumber);
 
-    // For demo purposes, simulate fetching M-Pesa balance
-    // In production, this would integrate with actual M-Pesa API
+    // Simulate M-Pesa balance (between KES 1,000 - 11,000)
     const simulatedBalance = Math.floor(Math.random() * 10000) + 1000;
     
     console.log('Simulated balance:', simulatedBalance);
