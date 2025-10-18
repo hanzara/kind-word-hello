@@ -29,11 +29,12 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { accountId, phoneNumber } = await req.json();
+    const { accountId, phoneNumber, provider } = await req.json();
 
-    console.log('Syncing M-Pesa balance for user:', user.id, 'phone:', phoneNumber);
+    console.log('Syncing mobile money balance for user:', user.id, 'phone:', phoneNumber, 'provider:', provider);
 
-    // Simulate M-Pesa balance (between KES 1,000 - 11,000)
+    // TODO: Integrate with Africa's Talking API or direct provider APIs
+    // For now, simulating balance - in production, use real API
     const simulatedBalance = Math.floor(Math.random() * 10000) + 1000;
     
     console.log('Simulated balance:', simulatedBalance);

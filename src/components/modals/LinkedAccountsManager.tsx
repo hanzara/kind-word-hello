@@ -108,7 +108,7 @@ export function LinkedAccountsManager() {
                 </div>
               </div>
               <div className="flex gap-2">
-                {account.provider === 'mpesa' && account.phone_number && (
+                {account.account_type === 'mobile_money' && account.phone_number && (
                   <Button
                     size="sm"
                     variant="outline"

@@ -197,15 +197,19 @@ export const useLinkedAccounts = () => {
     },
   });
 
-  // Sync M-Pesa balance
+  // Sync mobile money balance
   const syncBalanceMutation = useMutation({
     mutationFn: async (params: { accountId: string; phoneNumber: string }) => {
       if (!user) throw new Error('User not authenticated');
+
+      // Get account provider info
+      const account = linkedAccounts?.find(acc => acc.id === params.accountId);
 
       const { data, error } = await supabase.functions.invoke('sync-mpesa-balance', {
         body: {
           accountId: params.accountId,
           phoneNumber: params.phoneNumber,
+          provider: account?.provider || 'mpesa',
         },
       });
 
@@ -219,13 +223,13 @@ export const useLinkedAccounts = () => {
       
       toast({
         title: '✅ Balance Synced',
-        description: `Your M-Pesa balance has been updated: KES ${data.balance?.toFixed(2)}`,
+        description: `Your mobile money balance has been updated: KES ${data.balance?.toFixed(2)}`,
       });
     },
     onError: (error: any) => {
       toast({
         title: '❌ Sync Failed',
-        description: error.message || 'Failed to sync M-Pesa balance',
+        description: error.message || 'Failed to sync mobile money balance',
         variant: 'destructive',
       });
     },
