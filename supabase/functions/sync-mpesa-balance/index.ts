@@ -33,69 +33,11 @@ serve(async (req) => {
 
     console.log('Syncing M-Pesa balance for user:', user.id, 'phone:', phoneNumber);
 
-    // M-Pesa Account Balance API Integration
-    const mpesaConsumerKey = Deno.env.get('MPESA_CONSUMER_KEY');
-    const mpesaConsumerSecret = Deno.env.get('MPESA_CONSUMER_SECRET');
-    const mpesaShortcode = Deno.env.get('MPESA_SHORTCODE');
-    const mpesaPasskey = Deno.env.get('MPESA_PASSKEY');
-    const mpesaEnvironment = Deno.env.get('MPESA_ENVIRONMENT') || 'sandbox';
-
-    if (!mpesaConsumerKey || !mpesaConsumerSecret) {
-      throw new Error('M-Pesa credentials not configured');
-    }
-
-    // Get OAuth token
-    const authString = btoa(`${mpesaConsumerKey}:${mpesaConsumerSecret}`);
-    const tokenUrl = mpesaEnvironment === 'production'
-      ? 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
-      : 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-
-    const tokenResponse = await fetch(tokenUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${authString}`,
-      },
-    });
-
-    if (!tokenResponse.ok) {
-      throw new Error('Failed to get M-Pesa OAuth token');
-    }
-
-    const { access_token } = await tokenResponse.json();
-
-    // Query Account Balance
-    const balanceUrl = mpesaEnvironment === 'production'
-      ? 'https://api.safaricom.co.ke/mpesa/accountbalance/v1/query'
-      : 'https://sandbox.safaricom.co.ke/mpesa/accountbalance/v1/query';
-
-    const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14);
-    const password = btoa(`${mpesaShortcode}${mpesaPasskey}${timestamp}`);
-
-    const balanceRequest = {
-      Initiator: 'testapi',
-      SecurityCredential: password,
-      CommandID: 'AccountBalance',
-      PartyA: mpesaShortcode,
-      IdentifierType: '4',
-      Remarks: 'Balance query',
-      QueueTimeOutURL: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mpesa-callback`,
-      ResultURL: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mpesa-callback`,
-    };
-
-    const balanceResponse = await fetch(balanceUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(balanceRequest),
-    });
-
-    const balanceData = await balanceResponse.json();
-    console.log('M-Pesa balance response:', balanceData);
-
-    // For demo/sandbox, simulate a balance
+    // For demo purposes, simulate fetching M-Pesa balance
+    // In production, this would integrate with actual M-Pesa API
     const simulatedBalance = Math.floor(Math.random() * 10000) + 1000;
+    
+    console.log('Simulated balance:', simulatedBalance);
 
     // Update linked account metadata with balance
     const { error: updateError } = await supabaseClient
@@ -104,7 +46,7 @@ serve(async (req) => {
         metadata: {
           balance: simulatedBalance,
           last_synced: new Date().toISOString(),
-          mpesa_response: balanceData,
+          sync_type: 'simulated',
         }
       })
       .eq('id', accountId)

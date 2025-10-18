@@ -92,3 +92,9 @@ verify_jwt = true
 
 [functions.manual-credit-payment]
 verify_jwt = true
+
+[functions.sync-mpesa-balance]
+verify_jwt = true
+
+[functions.link-account-callback]
+verify_jwt = false
