@@ -45,10 +45,9 @@ serve(async (req) => {
 
     if (action === 'initialize') {
       // Initialize Paystack transaction
-      // Initialize Paystack transaction
-      // Use the public Functions domain for webhooks (required for external providers)
-      const functionsBase = supabaseUrl.replace('.supabase.co', '.functions.supabase.co');
-      const callbackUrl = `${functionsBase}/paystack-callback`;
+      // callback_url is where the USER is redirected after payment (optional)
+      // webhook is configured separately in Paystack dashboard
+      const { callback_url } = requestBody;
       
       const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
         method: 'POST',
@@ -59,7 +58,7 @@ serve(async (req) => {
         body: JSON.stringify({
           email,
           amount: Math.round(amount * 100), // Convert to kobo/cents
-          callback_url: callbackUrl,
+          callback_url: callback_url, // User redirect URL from frontend
           metadata: metadata || {},
           channels: channels || ['card', 'bank', 'ussd', 'mobile_money', 'bank_transfer'],
         }),

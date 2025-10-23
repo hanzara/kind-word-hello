@@ -53,6 +53,7 @@ import TermsOfServicePage from "./pages/TermsOfServicePage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import ProfileSettingsPage from "./pages/ProfileSettingsPage";
 import InviteMembersPage from "./pages/InviteMembersPage";
+import PaymentCallbackPage from "./pages/PaymentCallbackPage";
 
 const queryClient = new QueryClient();
 
@@ -165,6 +166,7 @@ function App() {
                 <Route path="/download" element={<AppDownloadPage />} />
                 <Route path="/terms" element={<TermsOfServicePage />} />
                 <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/payment-callback" element={<PaymentCallbackPage />} />
                 <Route path="*" element={
                   <ProtectedRoute>
                     <AppLayout>
