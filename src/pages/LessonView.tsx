@@ -76,7 +76,7 @@ export default function LessonView() {
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
-        .from('lesson_comments')
+        .from('lesson_comments' as any)
         .select('*')
         .eq('lesson_id', id)
         .order('created_at', { ascending: false });
@@ -124,7 +124,7 @@ export default function LessonView() {
       if (!user) return;
 
       const { error } = await supabase
-        .from('user_progress')
+        .from('user_progress' as any)
         .upsert({
           user_id: user.id,
           lesson_id: lesson.id,
@@ -151,7 +151,7 @@ export default function LessonView() {
       }
 
       const { error } = await supabase
-        .from('lesson_comments')
+        .from('lesson_comments' as any)
         .insert({
           lesson_id: lesson.id,
           user_id: user.id,

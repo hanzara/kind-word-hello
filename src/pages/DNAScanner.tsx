@@ -89,10 +89,10 @@ export default function DNAScanner() {
     const { data: suggestionsData } = await supabase
       .from("genome_suggestions")
       .select("*")
-      .eq("genome_analysis_id", genomeId);
+      .eq("repository_id", genomeData?.repository_id);
     
-    // Parse analysis_data which contains the genome structure
-    const analysisData = (genomeData?.analysis_data as any) || {};
+    // Parse genome_data which contains the genome structure
+    const analysisData = (genomeData?.genome_data as any) || {};
     
     setScanResults({
       genome: genomeData,

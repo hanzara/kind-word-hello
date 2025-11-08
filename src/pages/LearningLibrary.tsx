@@ -80,21 +80,21 @@ export default function LearningLibrary() {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from('user_progress')
+        .from('user_progress' as any)
         .select('lesson_id, completed, quiz_score')
         .eq('user_id', user.id);
 
       if (error) throw error;
       
-      setProgress(data || []);
+      setProgress(data as any || []);
       
       // Calculate total XP and completed count
-      const completed = data?.filter(p => p.completed) || [];
+      const completed = data?.filter((p: any) => p.completed) || [];
       setCompletedCount(completed.length);
       
       // Fetch XP for completed lessons
       if (completed.length > 0) {
-        const lessonIds = completed.map(p => p.lesson_id);
+        const lessonIds = completed.map((p: any) => p.lesson_id);
         const { data: lessonsData, error: lessonsError } = await supabase
           .from('lessons')
           .select('xp_points')

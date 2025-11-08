@@ -35,3 +35,15 @@ verify_jwt = false
 
 [functions.publish-to-marketplace]
 verify_jwt = false
+
+[functions.create-campaign]
+verify_jwt = false
+
+[functions.run-campaign]
+verify_jwt = false
+
+[functions.rollback-mutation]
+verify_jwt = false
+
+[functions.create-github-pr]
+verify_jwt = false
