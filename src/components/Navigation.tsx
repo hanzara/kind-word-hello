@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Code2, Brain, Bug, Users, Users2, Home, BookOpen } from "lucide-react";
+import { Code2, Brain, Bug, Users, Users2, Home, BookOpen, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -8,6 +8,7 @@ const Navigation = () => {
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
+    { path: "/synergy-hub", label: "Synergy Hub", icon: Sparkles },
     { path: "/editor", label: "Code Tutor", icon: Brain },
     { path: "/debugger", label: "Debugger", icon: Bug },
     { path: "/learning-library", label: "Learning", icon: BookOpen },

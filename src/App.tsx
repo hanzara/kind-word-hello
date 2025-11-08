@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Index from "./pages/Index";
+import SynergyHub from "./pages/SynergyHub";
 import Editor from "./pages/Editor";
 import Debugger from "./pages/Debugger";
 import Marketplace from "./pages/Marketplace";
@@ -34,6 +35,7 @@ const AppContent = () => {
       {showNavigation && <Navigation />}
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/synergy-hub" element={<SynergyHub />} />
         <Route path="/editor" element={<Editor />} />
         <Route path="/debugger" element={<Debugger />} />
         <Route path="/marketplace" element={<Marketplace />} />
